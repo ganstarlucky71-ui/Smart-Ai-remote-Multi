@@ -26,18 +26,6 @@ def extract_cid_from_link(text):
     if match: return match.group(1)
     return None
 
-def resolve_link_to_cid(url):
-    try:
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
-        response = requests.get(url, headers=headers, timeout=10, allow_redirects=True, verify=False)
-        combined_text = response.url + " " + response.text
-        cid_match = re.search(r'(C_\d+_V[12]_[A-Z]+_\d+_[A-Z]+|C_\d{10,})', combined_text, re.IGNORECASE)
-        if cid_match: 
-            return cid_match.group(1).upper()
-        return None
-    except Exception as e:
-        return None
-
 def smart_resolve_input(input_str):
     cid_match = re.search(r'(C_\d+_V[12]_[A-Za-z0-9_]+)', input_str, re.IGNORECASE)
     if cid_match:
@@ -158,34 +146,6 @@ st.markdown(
 st.markdown("<h1 style='text-align: center;'>☠️ <span class='disco-lucky'>𝐋𝐔𝐂𝐊𝐘</span> 🌎 <span class='disco-lucky'>𝙂𝙤𝙙𝙛𝙖𝙩𝙝𝙚𝙧</span> 🖥️</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; font-size: 1.5rem; font-weight: bold;'> <span class='disco-lucky'>FLEET CONTROL CENTER</span></p><hr style='border:1px solid #333; position:relative; z-index:10;'>", unsafe_allow_html=True)
 
-# ALL BOTS AT ONCE CONTROL
-col1, col2, col3 = st.columns([1, 4, 1])
-with col1:
-    st.markdown(f"<h3 style='margin-top: 5px; color: #ff3366;'>🚀 ALL BOTS</h3>", unsafe_allow_html=True)
-with col2:
-    all_target_input = st.text_input("Target", key="input_all", label_visibility="collapsed", placeholder="Sabh bots ke liye Room Link / ID...")
-with col3:
-    if st.button("🔥 SEND ALL", key="btn_all"):
-        if not all_target_input:
-            st.warning("⚠️ Link ya ID daalo!")
-        else:
-            with st.spinner(f"⏳ Sabko bhej raha hu..."):
-                target_dest = smart_resolve_input(all_target_input)
-                if target_dest:
-                    try:
-                        api_link = f"{BOT_SERVER_URL.strip('/')}/change_room?link={quote(target_dest)}&bot=all"
-                        res = requests.get(api_link, timeout=15, verify=False)
-                        if res.status_code == 200:
-                            st.success(f"✅ SUCCESS: Sabhi bots shift ho gaye!")
-                            st.balloons()
-                        else:
-                            st.error(f"❌ ERROR {res.status_code}: Server ne mana kar diya.")
-                    except Exception as e:
-                        st.error(f"❌ SERVER OFFLINE ya UNREACHABLE. URL check karein.")
-                else:
-                    st.error("❌ INVALID TARGET.")
-st.markdown("<hr style='border:1px dashed #333;'>", unsafe_allow_html=True)
-
 # INDIVIDUAL 8 BOTS LOOP CREATION
 for i in range(1, TOTAL_BOTS + 1):
     col1, col2, col3 = st.columns([1, 4, 1])
@@ -215,6 +175,37 @@ for i in range(1, TOTAL_BOTS + 1):
                             st.error(f"❌ Bot {i} ERROR {res.status_code}")
                     except Exception as e:
                         st.error(f"❌ SERVER OFFLINE ya UNREACHABLE.")
+                else:
+                    st.error("❌ INVALID TARGET.")
+
+st.markdown("<hr style='border:1px dashed #333;'>", unsafe_allow_html=True)
+
+# ==========================================
+# 9th BUTTON: ALL BOTS AT ONCE CONTROL 🔥
+# ==========================================
+col1, col2, col3 = st.columns([1, 4, 1])
+with col1:
+    st.markdown(f"<h3 style='margin-top: 5px; color: #ff3366;'>🚀 9. ALL BOTS</h3>", unsafe_allow_html=True)
+with col2:
+    all_target_input = st.text_input("Target", key="input_all", label_visibility="collapsed", placeholder="Sabhi 8 bots ke liye Room Link / ID yaha daalein...")
+with col3:
+    if st.button("🔥 SEND ALL", key="btn_all"):
+        if not all_target_input:
+            st.warning("⚠️ Link ya ID daalo!")
+        else:
+            with st.spinner(f"⏳ Sabko bhej raha hu..."):
+                target_dest = smart_resolve_input(all_target_input)
+                if target_dest:
+                    try:
+                        api_link = f"{BOT_SERVER_URL.strip('/')}/change_room?link={quote(target_dest)}&bot=all"
+                        res = requests.get(api_link, timeout=15, verify=False)
+                        if res.status_code == 200:
+                            st.success(f"✅ SUCCESS: Sabhi bots shift ho gaye!")
+                            st.balloons()
+                        else:
+                            st.error(f"❌ ERROR {res.status_code}: Server ne mana kar diya.")
+                    except Exception as e:
+                        st.error(f"❌ SERVER OFFLINE ya UNREACHABLE. URL check karein.")
                 else:
                     st.error("❌ INVALID TARGET.")
 
