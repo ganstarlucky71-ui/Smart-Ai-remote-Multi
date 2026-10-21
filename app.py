@@ -12,7 +12,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==========================================
 # Ise update karein apna actual server link daalkar agar render pe ho,
 # Example: "https://smartai-f1ju.onrender.com"
-BOT_SERVER_URL = "https://smartai-f1ju.onrender.com" 
+BOT_SERVER_URL = "https://smartai-nye0.onrender.com" 
 
 # Kitne bots aap run kar rahe ho (Aapne 8 bole hain)
 TOTAL_BOTS = 8
